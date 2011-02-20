@@ -5,17 +5,29 @@ import java.util.List;
 
 public class Lex {
 	
-	public static final String OPEN_PAR = "OPEN_PAR";
-	public static final String CLOSE_PAR = "CLOSE_PAR"; 
-	public static final String ATOM = "ATOM"; 
-	public static final String SYMBOL = "SYMBOL"; 
-	
-	interface Token {
-		String value();
-		String type();
+	class Token {
+		String value() {
+			return null;
+		}
+		
+		boolean isAtom() {
+			return false;
+		}
+		
+		boolean isOpenPar() {
+			return false;
+		}
+		
+		boolean isClosePar() {
+			return false;			
+		}
+		
+		boolean isSymbol() {
+			return false;	
+		}
 	}
 	
-	class Atom implements Token {
+	class Atom extends Token {
 		String value;
 		
 		Atom(String value) {
@@ -23,15 +35,14 @@ public class Lex {
 		}
 		
 		@Override
-		public String value() {
+		boolean isAtom() {
+			return true;
+		}		
+		
+		@Override
+		String value() {
 			return value;
 		}
-
-		@Override
-		public String type() {
-			return ATOM;
-		}
-		
 	};
 	
 	class Symbol extends Atom {
@@ -39,39 +50,27 @@ public class Lex {
 		Symbol(String value) {
 			super(value);
 		}
-		
-		@Override
-		public String type() {
-			return SYMBOL;
-		}
-	};
-	
-	class OpenPar implements Token {
 
 		@Override
-		public String value() {
-			return "(";
-		}
-
-		@Override
-		public String type() {
-			return OPEN_PAR;
+		boolean isSymbol() {
+			return true;
 		}
 		
 	};
 	
-	class ClosePar implements Token {
+	class OpenPar extends Token {
 
 		@Override
-		public String value() {
-			return ")";
+		boolean isOpenPar() {
+			return true;
 		}
-
+	};
+	
+	class ClosePar extends Token {
 		@Override
-		public String type() {
-			return CLOSE_PAR;
+		boolean isClosePar() {
+			return true;
 		}
-		
 	};
 	
 	public List<Token> read(String input) {
@@ -98,6 +97,16 @@ public class Lex {
 				} while (Character.isDigit(ch));
 				res.add(new Symbol(str.toString()));
 				idx--;
+			}
+			else if (ch == '"') {
+				StringBuilder str = new StringBuilder();
+				do {
+					str.append(ch);
+					idx++;
+					ch = input.charAt(idx);
+				} while (ch != '"');
+				str.append(ch);
+				res.add(new Symbol(str.toString()));
 			}
 			else {
 				StringBuilder str = new StringBuilder();

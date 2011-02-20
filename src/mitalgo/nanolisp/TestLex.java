@@ -12,16 +12,16 @@ public class TestLex extends TestCase {
 		Lex lex = new Lex();
 		List<Lex.Token> tokens = lex.read("( + 1 12 \"hola mundo\")");
 		
-		assertEquals(5, tokens.size());
-		assertEquals(Lex.OPEN_PAR, tokens.get(0).type());
-		assertEquals(Lex.ATOM, tokens.get(1).type());
+		assertEquals(6, tokens.size());
+		assertTrue(tokens.get(0).isOpenPar());
+		assertTrue(tokens.get(1).isAtom());
 		assertEquals("+", tokens.get(1).value());
-		assertEquals(Lex.SYMBOL, tokens.get(2).type());
+		assertTrue(tokens.get(2).isSymbol());
 		assertEquals("1", tokens.get(2).value());
-		assertEquals(Lex.SYMBOL, tokens.get(3).type());
+		assertTrue(tokens.get(3).isSymbol());
 		assertEquals("12", tokens.get(3).value());
-		assertEquals(Lex.SYMBOL, tokens.get(4).type());
+		assertTrue(tokens.get(4).isSymbol());
 		assertEquals("\"hola mundo\"", tokens.get(4).value());
-		assertEquals(Lex.CLOSE_PAR, tokens.get(5).type());
+		assertTrue(tokens.get(5).isClosePar());
 	}
 }
