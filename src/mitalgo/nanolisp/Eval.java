@@ -1,16 +1,25 @@
 package mitalgo.nanolisp;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Eval {
 	
+	private Map<String, Function> functions;
+	
+	public Eval() {
+		functions = new HashMap<String, Function>();
+		functions.put("+", new SumFunction(this));
+	}
+
 	public Node eval(String expr) {
 		Parser parser = new Parser();
 		Node tree = parser.read(expr);
 		return eval(tree);
 	}
 
-	private Node eval(Node tree) {
+	public Node eval(Node tree) {
 		if (tree.isNumber()) {
 			return new Node(tree.number());
 		}
@@ -22,15 +31,12 @@ public class Eval {
 			if (list.size() > 0) {
 				Node head = list.get(0);
 				List<Node> rest = list.subList(1, list.size());
-				if (head.isString() && head.strValue().equals("+")) {
-					int sum = 0;
-					for(Node node:rest) {
-						Node subEval = eval(node);
-						if (subEval.isNumber()) {
-							sum += subEval.number().intValue();
-						}
+				if (head.isString()) {
+					Function funct = functions.get(head.strValue());
+					if (funct != null) {
+						return funct.eval(rest);
 					}
-					return new Node(sum);
+					
 				}
 			}
 		}
