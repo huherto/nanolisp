@@ -1,7 +1,10 @@
 package mitalgo.nanolisp;
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
+import static java.text.CharacterIterator.DONE;
 
 public class Lex {
 	
@@ -102,9 +105,8 @@ public class Lex {
 	public List<Token> read(String input) {
 		List<Token> res =  new ArrayList<Token>();
 		
-		int idx = 0;
-		while(idx < input.length()) {
-			char ch = input.charAt(idx);
+		CharacterIterator iter = new StringCharacterIterator(input);
+		for(char ch = iter.first(); ch != DONE; ch = iter.next()) {
 			if (ch == '(') {
 				res.add(new OpenPar());
 			}
@@ -118,22 +120,16 @@ public class Lex {
 				StringBuilder str = new StringBuilder();
 				do {
 					str.append(ch);
-					if (idx == input.length() - 1) {
-						res.add(new Symbol(str.toString()));
-						return res;
-					}
-					idx++;
-					ch = input.charAt(idx);
-				} while (Character.isDigit(ch));
+					ch = iter.next();
+				} while (ch != DONE && Character.isDigit(ch));
 				res.add(new Symbol(str.toString()));
-				idx--;
+				ch = iter.previous();
 			}
 			else if (ch == '"') {
 				StringBuilder str = new StringBuilder();
 				do {
 					str.append(ch);
-					idx++;
-					ch = input.charAt(idx);
+					ch = iter.next();
 				} while (ch != '"');
 				str.append(ch);
 				res.add(new Symbol(str.toString()));
@@ -142,17 +138,11 @@ public class Lex {
 				StringBuilder str = new StringBuilder();
 				do {
 					str.append(ch);
-					if (idx == input.length() - 1) {
-						res.add(new Atom(str.toString()));
-						return res;
-					}
-					idx++;
-					ch = input.charAt(idx);
-				} while (ch != ' ' && ch != '(' && ch !=  ')');
+					ch = iter.next();
+				} while (ch != DONE && ch != ' ' && ch != '(' && ch !=  ')');
 				res.add(new Atom(str.toString()));
-				idx--;
+				ch = iter.previous();
 			}
-			idx++;
 		}
 		return res;
 	}	
