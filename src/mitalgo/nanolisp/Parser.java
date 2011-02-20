@@ -42,7 +42,13 @@ public class Parser {
 			}
 		}
 		else if (token.isAtom()) {
-			return new Node(token.value());
+			if (token.isNumberSymbol()) {
+				Integer num = new Integer(token.value());
+				return new Node(num);
+			}
+			else
+				return new Node(token.value());
+				
 		}
 		else {
 			throw new SyntaxError();

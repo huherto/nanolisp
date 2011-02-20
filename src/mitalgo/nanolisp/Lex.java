@@ -29,10 +29,15 @@ public class Lex {
 			return false;	
 		}
 		
+		public boolean isNumberSymbol() {
+			return false;
+		}
+		
 		@Override
 		public String toString() {
 			return "Token";
 		}
+
 	}
 	
 	class Atom extends Token {
@@ -61,12 +66,12 @@ public class Lex {
 	
 	class Symbol extends Atom {
 
-		Symbol(String value) {
+		public Symbol(String value) {
 			super(value);
 		}
 
 		@Override
-		boolean isSymbol() {
+		public boolean isSymbol() {
 			return true;
 		}
 
@@ -76,6 +81,18 @@ public class Lex {
 		}
 		
 	};
+	
+	class NumberSymbol extends Symbol {
+		
+		public NumberSymbol(String value) {
+			super(value);
+		}
+		
+		@Override
+		public boolean isNumberSymbol() {
+			return true;
+		}
+	}
 	
 	class OpenPar extends Token {
 
@@ -122,7 +139,7 @@ public class Lex {
 					str.append(ch);
 					ch = iter.next();
 				} while (ch != DONE && Character.isDigit(ch));
-				res.add(new Symbol(str.toString()));
+				res.add(new NumberSymbol(str.toString()));
 				ch = iter.previous();
 			}
 			else if (ch == '"') {

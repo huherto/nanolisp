@@ -19,6 +19,7 @@ public class TestLex extends TestCase {
 		assertTrue(tokens.get(2).isSymbol());
 		assertEquals("1", tokens.get(2).value());
 		assertTrue(tokens.get(3).isSymbol());
+		assertTrue(tokens.get(3).isNumberSymbol());
 		assertEquals("12", tokens.get(3).value());
 		assertTrue(tokens.get(4).isSymbol());
 		assertEquals("\"hola mundo\"", tokens.get(4).value());

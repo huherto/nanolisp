@@ -1,25 +1,42 @@
 package mitalgo.nanolisp;
 
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
 	
-	private String value;
+	private String strValue = null;
 	
-	private List<Node> list;
+	private Number number = null;
+	
+	private List<Node> list = null;
 
 	public Node() {
 		super();
 	}
 
-	public Node(String value) {
-		super();
-		this.value = value;
+	public Node(Number num) {
+		number = num;
 	}
 
-	boolean hasList() {
+	public Node(String value) {
+		super();
+		this.strValue = value;
+	}
+	
+	boolean isNull() {
+		return strValue == null && number == null && list == null;
+	}
+
+	boolean isNumber() {
+		return number != null;
+	}
+	
+	boolean isString() {
+		return strValue != null;
+	}
+	
+	boolean isList() {
 		return list != null;
 	}
 	
@@ -33,21 +50,35 @@ public class Node {
 		list.add(node);
 	}
 	
-	public String value() {
-		return value;
+	public Number number() {
+		return number;
+	}
+	
+	public String strValue() {
+		return strValue;
 	}
 	
 	public String toString() {
-		if (list != null) {
+		if (isNumber()) {
+			return number.toString();
+		}
+		if (isString()) {
+			return strValue;
+		}
+		if (isList()) {
 			StringBuilder str = new StringBuilder();
 			str.append("(");
+			int i = 0;
 			for(Node node : list) {
 				str.append(node);
-				str.append(" ");
+				if (i < list.size() - 1)
+					str.append(" ");
+				i++;
 			}
 			str.append(")");
 			return str.toString();
 		}
-		return value;
+		return "null";
 	}
+
 }
