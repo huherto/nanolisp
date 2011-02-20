@@ -25,6 +25,11 @@ public class Lex {
 		boolean isSymbol() {
 			return false;	
 		}
+		
+		@Override
+		public String toString() {
+			return "Token";
+		}
 	}
 	
 	class Atom extends Token {
@@ -43,6 +48,12 @@ public class Lex {
 		String value() {
 			return value;
 		}
+
+		@Override
+		public String toString() {
+			return "Atom["+value+"]";
+		}
+		
 	};
 	
 	class Symbol extends Atom {
@@ -55,6 +66,11 @@ public class Lex {
 		boolean isSymbol() {
 			return true;
 		}
+
+		@Override
+		public String toString() {
+			return "Symbol["+value+"]";
+		}
 		
 	};
 	
@@ -64,6 +80,11 @@ public class Lex {
 		boolean isOpenPar() {
 			return true;
 		}
+
+		@Override
+		public String toString() {
+			return "OpenPar";
+		}
 	};
 	
 	class ClosePar extends Token {
@@ -71,6 +92,11 @@ public class Lex {
 		boolean isClosePar() {
 			return true;
 		}
+
+		@Override
+		public String toString() {
+			return "ClosePar";
+		}	
 	};
 	
 	public List<Token> read(String input) {
@@ -92,6 +118,10 @@ public class Lex {
 				StringBuilder str = new StringBuilder();
 				do {
 					str.append(ch);
+					if (idx == input.length() - 1) {
+						res.add(new Symbol(str.toString()));
+						return res;
+					}
 					idx++;
 					ch = input.charAt(idx);
 				} while (Character.isDigit(ch));
@@ -112,6 +142,10 @@ public class Lex {
 				StringBuilder str = new StringBuilder();
 				do {
 					str.append(ch);
+					if (idx == input.length() - 1) {
+						res.add(new Atom(str.toString()));
+						return res;
+					}
 					idx++;
 					ch = input.charAt(idx);
 				} while (ch != ' ' && ch != '(' && ch !=  ')');

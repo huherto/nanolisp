@@ -23,5 +23,18 @@ public class TestLex extends TestCase {
 		assertTrue(tokens.get(4).isSymbol());
 		assertEquals("\"hola mundo\"", tokens.get(4).value());
 		assertTrue(tokens.get(5).isClosePar());
+		
+		tokens = lex.read("+");
+		assertEquals(1, tokens.size());
+		assertTrue(tokens.get(0).isAtom());
+		
+		tokens = lex.read("12");
+		assertEquals(1, tokens.size());
+		assertTrue(tokens.get(0).isSymbol());
+
+		tokens = lex.read("\"hola mundo\"");
+		assertEquals(1, tokens.size());
+		assertTrue(tokens.get(0).isSymbol());
+		assertEquals("\"hola mundo\"", tokens.get(0).value());
 	}
 }
