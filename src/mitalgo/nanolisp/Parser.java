@@ -8,10 +8,6 @@ import mitalgo.nanolisp.Lex.Token;
 
 public class Parser {
 	
-	class SyntaxError extends Error {
-		private static final long serialVersionUID = 1L;		
-	}
-
 	public Node read(String input) {
 		Lex lex = new Lex();
 		List<Lex.Token> tokens = lex.read(input);
@@ -31,14 +27,8 @@ public class Parser {
 				if (token.isClosePar()) {
 					return node;
 				}
-				else if (token.isOpenPar()) {
-					tokens.previous();
-					node.add(parseListOrAtom(tokens));
-				}
-				else {
-					tokens.previous();
-					node.add(parseListOrAtom(tokens));
-				}
+				tokens.previous();
+				node.add(parseListOrAtom(tokens));
 			}
 		}
 		else if (token.isAtom()) {
@@ -46,12 +36,12 @@ public class Parser {
 				Integer num = new Integer(token.value());
 				return new Node(num);
 			}
-			else
+			else {
 				return new Node(token.value());
-				
+			}
 		}
 		else {
-			throw new SyntaxError();
+			throw new SyntaxError("Unexpected "+token.toString());
 		}
 	}
 }

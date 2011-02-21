@@ -5,6 +5,8 @@ import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 import static java.text.CharacterIterator.DONE;
+import static java.lang.Character.isDigit;
+import static java.lang.Character.isSpaceChar;
 
 public class Lex {
 	
@@ -119,6 +121,89 @@ public class Lex {
 		}	
 	};
 	
+	/**
+	 * Read a number. [0-9]+
+	 */
+	private String readNumber(CharacterIterator iter) {
+		char ch = iter.current();
+		StringBuilder str = new StringBuilder();
+		do {
+			str.append(ch);
+			ch = iter.next();
+		} while (ch != DONE && isDigit(ch));
+		iter.previous();
+		return str.toString();
+	}
+	
+	/**
+	 * Read a string in quotes. ".*"
+	 */
+	private String readString(CharacterIterator iter) {
+		char ch = iter.current();
+		StringBuilder str = new StringBuilder();
+		do {
+			str.append(ch);
+			ch = iter.next();
+			if (ch == DONE) {
+				throw new SyntaxError("EOF unexpected. Incomplete string");
+			}
+		} while (ch != '"');
+		str.append(ch);		
+		return str.toString();
+	}
+	
+	/**
+	 * Read and ignore a comment. ;.*\n
+	 * @param iter
+	 */
+	private void ignoreComment(CharacterIterator iter) {
+		char ch = iter.current();
+		do {
+			ch = iter.next();
+		}while(ch != DONE && ch != '\n');
+	}	
+	
+	/**
+	 * read a literal atom.  '[^()\s]*
+	 */
+	private String readLiteralAtom(CharacterIterator iter) {
+		if (iter.current() != '\'') {
+			throw new IllegalStateException();
+		}
+		char ch = iter.next();
+		StringBuilder str = new StringBuilder();
+		do {
+			str.append(ch);
+			ch = iter.next();
+		} while (ch != DONE && !isSpaceChar(ch) && ch != '(' && ch !=  ')');
+		ch = iter.previous();		
+		
+		return str.toString();
+	}
+	
+	/**
+	 * read a literal list. '(.*)
+	 */
+	private String readLiteralList(CharacterIterator iter) {
+		if (iter.current() != '\'') {
+			throw new IllegalStateException();
+		}
+		char ch = iter.next();
+		if (ch != '(') {
+			throw new IllegalStateException();
+		}
+		StringBuilder str = new StringBuilder();
+		do {
+			str.append(ch);
+			ch = iter.next();
+		} while (ch != DONE && ch !=  ')');
+		if (ch != ')') {
+			throw new SyntaxError("Character ')' expected");
+		}
+		str.append(ch);
+		return str.toString();
+	}
+
 	public List<Token> read(String input) {
 		List<Token> res =  new ArrayList<Token>();
 		
@@ -130,38 +215,42 @@ public class Lex {
 			else if (ch == ')') {
 				res.add(new ClosePar());
 			}
-			else if (ch == ' ') {
-				
+			else if (isSpaceChar(ch)) {
 			}
-			else if (Character.isDigit(ch)) {
-				StringBuilder str = new StringBuilder();
-				do {
-					str.append(ch);
-					ch = iter.next();
-				} while (ch != DONE && Character.isDigit(ch));
-				res.add(new NumberSymbol(str.toString()));
-				ch = iter.previous();
+			else if (isDigit(ch)) {
+				String number = readNumber(iter);
+				res.add(new NumberSymbol(number));
 			}
 			else if (ch == '"') {
-				StringBuilder str = new StringBuilder();
-				do {
-					str.append(ch);
-					ch = iter.next();
-				} while (ch != '"');
-				str.append(ch);
-				res.add(new Symbol(str.toString()));
+				String str = readString(iter);
+				res.add(new Symbol(str));
+			}
+			else if (ch == ';') {
+				ignoreComment(iter);
+			}	
+			else if (ch == '\'') {
+				ch = iter.next();
+				if (ch == '(') {
+					iter.previous();
+					String str = readLiteralList(iter);
+					res.add(new Symbol(str));
+				}
+				else {
+					iter.previous();
+					String str = readLiteralAtom(iter);
+					res.add(new Symbol(str));
+				}
 			}
 			else {
 				StringBuilder str = new StringBuilder();
 				do {
 					str.append(ch);
 					ch = iter.next();
-				} while (ch != DONE && ch != ' ' && ch != '(' && ch !=  ')');
+				} while (ch != DONE && !isSpaceChar(ch) && ch != '(' && ch !=  ')');
 				res.add(new Atom(str.toString()));
 				ch = iter.previous();
 			}
 		}
 		return res;
-	}	
-
+	}
 }

@@ -38,6 +38,13 @@ public class TestParser extends TestCase {
 		List<Node> list2 = list1.get(1).getList();
 		assertEquals(3, list2.size());
 		assertEquals("(list (5 3 2))", node.toString());
+		
+		node = parser.read("(+ 2 ; comentario \n 2 )");
+		assertEquals("(+ 2 2)", node.toString());
+		
+		node = parser.read("'Jhon");
+		assertEquals("Jhon", node.toString());
+
 	}
 
 }

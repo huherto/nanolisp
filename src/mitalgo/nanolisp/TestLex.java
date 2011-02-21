@@ -37,5 +37,13 @@ public class TestLex extends TestCase {
 		assertEquals(1, tokens.size());
 		assertTrue(tokens.get(0).isSymbol());
 		assertEquals("\"hola mundo\"", tokens.get(0).value());
+		
+		tokens = lex.read("( + 2 2) ; Este es un comentario\n");
+		assertEquals(5, tokens.size());
+		
+		tokens = lex.read("(list '(John Q Public) )");
+		assertEquals(4, tokens.size());
+		assertEquals("(John Q Public)", tokens.get(2).value());
+
 	}
 }

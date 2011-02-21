@@ -11,6 +11,7 @@ public class Eval {
 	public Eval() {
 		functions = new HashMap<String, Function>();
 		functions.put("+", new SumFunction(this));
+		functions.put("-", new SubstractFunction(this));
 	}
 
 	public Node eval(String expr) {
