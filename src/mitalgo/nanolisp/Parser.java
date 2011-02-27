@@ -33,8 +33,15 @@ public class Parser {
 		}
 		else if (token.isAtom()) {
 			if (token.isNumberSymbol()) {
-				Integer num = new Integer(token.value());
-				return new Node(num);
+				String value = token.value();
+				if (value.indexOf('.') >= 0) {
+					Float num = new Float(value);
+					return new Node(num);
+				}
+				else {
+					Integer num = new Integer(value);
+					return new Node(num);					
+				}
 			}
 			else {
 				return new Node(token.value());

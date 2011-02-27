@@ -1,5 +1,6 @@
 package mitalgo.nanolisp;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,10 +55,48 @@ public class Node {
 		return number;
 	}
 	
+	public BigDecimal toDecimal() {
+		if (number != null) { 
+			if (isFloat(number))
+				return new BigDecimal(number.doubleValue());
+			else if (isDecimal(number)) {
+				return (BigDecimal)number;
+			}
+			else if (isInteger(number)){
+				return new BigDecimal(number.longValue());
+			}
+		}
+		return null;
+	}
+	
 	public String strValue() {
 		return strValue;
 	}
 	
+	public boolean isDecimal() {
+		return number != null && isDecimal(number);
+	}
+	
+	public boolean isFloat() {
+		return number != null && isFloat(number);
+	}
+	
+	public boolean isInteger() {
+		return number != null && isInteger(number);
+	}
+	
+	public static boolean isDecimal(Number num) {
+		return num instanceof BigDecimal;
+	}
+	
+	public static boolean isFloat(Number num) {
+		return num instanceof Float || num instanceof Double; 
+	}
+	
+	public static boolean isInteger(Number num) {
+		return num instanceof Integer || num instanceof Long || num instanceof Short; 
+	}
+
 	public String toString() {
 		if (isNumber()) {
 			return number.toString();

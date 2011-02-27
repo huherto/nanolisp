@@ -1,42 +1,39 @@
-/**
- * 
- */
 package mitalgo.nanolisp;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class SumFunction extends ArithmeticFunction {
+public class MultiplyFunction extends ArithmeticFunction {
 
-	public SumFunction(Eval evaluator) {
+	public MultiplyFunction(Eval evaluator) {
 		super(evaluator);
 	}
 
 	protected Node integerOp(List<Node> evaled) {
-		long sum = 0;
+		long sum = 1;
 		for(Node node: evaled) {
 			if (node.isNumber()) {
-				sum += node.number().longValue();
+				sum *= node.number().longValue();
 			}
 		}
 		return new Node(sum);		
 	}
 	
 	protected Node floatOp(List<Node> evaled) {
-		double sum = 0;
+		double sum = 1.0;
 		for(Node node: evaled) {
 			if (node.isNumber()) {
-				sum += node.number().doubleValue();
+				sum *= node.number().doubleValue();
 			}
 		}
 		return new Node(sum);
 	}
 	
 	protected Node decimalOp(List<Node> evaled) {
-		BigDecimal res = BigDecimal.ZERO;
+		BigDecimal res = BigDecimal.ONE;
 		for(Node node: evaled) {
 			if (node.isNumber()) {
-				res = res.add(node.toDecimal());
+				res = res.multiply(node.toDecimal());
 			}
 		}
 		return new Node(res);

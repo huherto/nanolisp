@@ -19,6 +19,14 @@ public class TestEval extends TestCase {
 		assertEquals(4444, res.number().intValue());
 		res = eval.eval("'(+ 2 2)");
 		assertEquals("(+ 2 2)", res.strValue());
+		res = eval.eval("(* 2 2 5)");
+		assertEquals(20, res.number().intValue());
+		res = eval.eval("(+ 2.2 2)");
+		assertTrue( Math.abs(res.number().doubleValue() - 4.2) < 0.01);
+		res = eval.eval("(* 10 1.1 3)");
+		assertTrue( Math.abs(res.number().doubleValue() - 33) < 0.01);
+		res = eval.eval("(- 12.12 10)");
+		assertTrue( Math.abs(res.number().doubleValue() - 2.12) < 0.01);
 	}
 
 }

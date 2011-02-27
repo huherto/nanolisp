@@ -130,8 +130,7 @@ public class Lex {
 		do {
 			str.append(ch);
 			ch = iter.next();
-		} while (ch != DONE && isDigit(ch));
-		iter.previous();
+		} while (isDigit(ch));
 		return str.toString();
 	}
 	
@@ -219,7 +218,16 @@ public class Lex {
 			}
 			else if (isDigit(ch)) {
 				String number = readNumber(iter);
+				if (iter.current() == '.') {
+					ch = iter.next();
+					if (isDigit(ch)) {
+						String fraction = readNumber(iter);
+						number = number + "." + fraction;
+					}
+				}
+				
 				res.add(new NumberSymbol(number));
+				iter.previous();
 			}
 			else if (ch == '"') {
 				String str = readString(iter);
