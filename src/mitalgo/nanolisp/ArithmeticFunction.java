@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class ArithmeticFunction extends Function {
 
 	public ArithmeticFunction(Eval evaluator) {
-		this.evaluator = evaluator;
+		super(evaluator);
 	}
 	
 	public static enum Arithmetic { IntegerType, FloatType, DecimalType }
@@ -44,6 +44,14 @@ public abstract class ArithmeticFunction extends Function {
 		throw new Error("Unknown arithmetic type");
 	}
 
+	protected void assertTwoNumbers(List<Node> params) {
+		Assert.isTrue(params.size() == 2);
+		Assert.notNull(params.get(0));
+		Assert.notNull(params.get(1));
+		Assert.isTrue(params.get(0).isNumber());
+		Assert.isTrue(params.get(1).isNumber());
+	}
+	
 	protected abstract Node integerOp(List<Node> evaled);
 	protected abstract Node floatOp(List<Node> evaled);
 	protected abstract Node decimalOp(List<Node> evaled);

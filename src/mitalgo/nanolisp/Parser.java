@@ -44,7 +44,11 @@ public class Parser {
 				}
 			}
 			else {
-				return new Node(token.value());
+				String value = token.value();
+				if (value.indexOf('\"') == 0) {
+					value = value.substring(1, value.length() - 1);					
+				}
+				return new Node(value);
 			}
 		}
 		else {

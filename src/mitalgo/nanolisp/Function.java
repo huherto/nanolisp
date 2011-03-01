@@ -5,7 +5,11 @@ import java.util.List;
 
 public abstract class Function {
 
-	protected Eval evaluator;
+	private Eval evaluator;
+	
+	public Function(Eval evaluator) {
+		this.evaluator = evaluator;
+	}
 
 	public abstract Node eval(List<Node> params);
 

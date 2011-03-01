@@ -6,13 +6,16 @@ import java.util.Map;
 
 public class Eval {
 	
-	private Map<String, ArithmeticFunction> functions;
+	private Map<String, Function> functions;
 	
 	public Eval() {
-		functions = new HashMap<String, ArithmeticFunction>();
+		functions = new HashMap<String, Function>();
 		functions.put("+", new SumFunction(this));
 		functions.put("-", new SubtractFunction(this));
 		functions.put("*", new MultiplyFunction(this));
+		functions.put("/", new DivisionFunction(this));
+		functions.put("expt", new ExptFunction(this));
+		functions.put("length", new LengthFunction(this));
 	}
 
 	public Node eval(String expr) {
