@@ -41,6 +41,9 @@ public class TestEval extends TestCase {
 		assertDouble(eval, 4.0, "(expt 16 0.5 )");
 		
 		assertInt(eval, 4, "(length \"hola\")");
+		
+		eval.eval("(defun foo ( a ) ( + 5 3 ))");
+		assertInt(eval, 8, "(foo)");
 	}
 
 }

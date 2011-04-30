@@ -43,6 +43,9 @@ public class Parser {
 					return new Node(num);					
 				}
 			}
+			else if (token.isSymbol()) {
+				return new Node(token.value(), true);
+			}
 			else {
 				String value = token.value();
 				if (value.indexOf('\"') == 0) {

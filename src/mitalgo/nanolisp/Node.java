@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Node {
 	
+	private boolean symbol = false;
+	
 	private String strValue = null;
 	
 	private Number number = null;
@@ -13,7 +15,6 @@ public class Node {
 	private List<Node> list = null;
 
 	public Node() {
-		super();
 	}
 
 	public Node(Number num) {
@@ -21,8 +22,12 @@ public class Node {
 	}
 
 	public Node(String value) {
-		super();
 		this.strValue = value;
+	}
+	
+	public Node(String value, boolean symbol) {
+		this.strValue = value;
+		this.symbol = symbol;
 	}
 	
 	boolean isNull() {
@@ -39,6 +44,10 @@ public class Node {
 	
 	boolean isList() {
 		return list != null;
+	}
+	
+	boolean isSymbol() {
+		return symbol;
 	}
 	
 	List<Node> getList() {

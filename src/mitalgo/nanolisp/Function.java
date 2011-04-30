@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class Function {
 
-	private Eval evaluator;
+	protected Eval evaluator;
 	
 	public Function(Eval evaluator) {
 		this.evaluator = evaluator;
